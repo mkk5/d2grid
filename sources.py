@@ -48,3 +48,40 @@ class FileSource:
         config = get_item(self._data.configs, key=param.config, name_field="config_name")
         category = get_item(config.categories, key=param.category, name_field="category_name")
         return category.hero_ids
+
+# =============================================================================
+
+type AttrParam = Literal["str", "agi", "int", "all"]
+
+class Stats(BaseModel):
+    primaryAttribute: AttrParam
+
+class Heroes(BaseModel):
+    id: int
+    displayName: str
+    stats: Stats
+
+class Constants(BaseModel):
+    heroes: list[Heroes]
+
+class Data(BaseModel):
+    constants: Constants
+
+class AttrResponse(BaseModel):
+    data: Data
+
+class AttrSource:
+    def __init__(self, api_key: str) -> None:
+        self.api_key = api_key
+        self._data = None
+
+    def _load_data(self) -> None:
+        if self._data is None:
+            headers = {"Authorization": f"Bearer {self.api_key}", "User-Agent": "STRATZ_API"}
+            with httpx.Client(headers=headers) as client:
+                res = client.post("https://api.stratz.com/graphql", json={"query": "{constants{heroes{id displayName stats{primaryAttribute}}}}"})
+            self._data = AttrResponse.model_validate_json(res.text)
+
+    def hero_list(self, param: AttrParam) -> list[int]:
+        self._load_data()
+        return [hero.id for hero in sorted(self._data.data.constants.heroes, key=lambda h: h.displayName) if hero.stats.primaryAttribute == param]
