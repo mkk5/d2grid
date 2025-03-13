@@ -1,4 +1,4 @@
-from pydantic import BaseModel, AfterValidator
+from pydantic import BaseModel, AfterValidator, Field
 from pathlib import Path
 from typing import Annotated, Literal
 from sources import FileParam, AttrParam
@@ -14,14 +14,14 @@ class CategorySettings(BaseModel):
     param: FileParam | AttrParam
 
 class ColumnSettings(BaseModel):
-    x: float
-    width: float
-    width_heroes: int
+    x: float = Field(ge=0)
+    width: float = Field(gt=0)
+    width_heroes: int = Field(gt=0)
 
 class ConfigSettings(BaseModel):
     name: str
     columns: list[ColumnSettings]
-    row_gap: float
+    row_gap: float = Field(ge=0)
     categories: list[CategorySettings]
 
 class Settings(BaseModel):
