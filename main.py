@@ -8,7 +8,7 @@ def get_category_height(width_px: float, width_heroes: int, heroes_number: int) 
     card_width = 51.304352
     card_height = 82.608699
     padding2 = 8.695647
-    height_heroes = (heroes_number+width_heroes-1) // width_heroes
+    height_heroes = -(-heroes_number//width_heroes) if heroes_number else 1 # div up (min 1)
     height = (card_height*height_heroes+padding2) * width_px / (card_width*width_heroes+padding2)
     return height
 
