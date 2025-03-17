@@ -10,7 +10,7 @@ Example `settings.json` file:
 {
     "api_key": "STRATZ API KEY",
     "file_source": "hero_grid_config.json",
-    "result_path": "new_hero_grid_config.json",
+    "result_paths": ["new_hero_grid_config.json"],
     "configs": [
         {
             "name": "Main Grid",

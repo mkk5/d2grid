@@ -7,7 +7,8 @@ def read_data[M: BaseModel](path: Path | str, model: type[M]) -> M:
         json_string = f.read()
     return model.model_validate_json(json_string, strict=True)
 
-def write_data(path: Path, data: BaseModel) -> None:
+def write_data(paths: list[Path], data: BaseModel) -> None:
     json_string = data.model_dump_json()
-    with open(path, "w") as f:
-        f.write(json_string)
+    for path in paths:
+        with open(path, "w") as f:
+            f.write(json_string)

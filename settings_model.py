@@ -27,5 +27,5 @@ class ConfigSettings(BaseModel):
 class Settings(BaseModel):
     api_key: str
     file_source: Annotated[Path, AfterValidator(json_extension)]
-    result_path: Annotated[Path, AfterValidator(json_extension)] # TODO: multiple paths
+    result_paths: list[Annotated[Path, AfterValidator(json_extension)]]
     configs: list[ConfigSettings]

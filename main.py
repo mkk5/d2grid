@@ -40,7 +40,7 @@ def main():
         "attr": AttrSource(settings.api_key)
     }
     new_configs = [create_config(config_settings, factory) for config_settings in settings.configs]
-    write_data(settings.result_path, HeroGrid(configs=new_configs))
+    write_data(settings.result_paths, HeroGrid(configs=new_configs))
 
 if __name__ == '__main__':
     main()
