@@ -10,7 +10,7 @@ def json_extension(path: Path) -> Path:
 
 class CategorySettings(BaseModel):
     name: str
-    source: Literal["file", "attr"]
+    source: Literal["file", "attr"] # TODO: generate and map to param
     param: FileParam | AttrParam
 
 class ColumnSettings(BaseModel):
