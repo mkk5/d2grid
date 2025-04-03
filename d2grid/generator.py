@@ -1,6 +1,14 @@
 from settings_model import ConfigSettings, CategorySettings, ColumnSettings
 from sources import Category, Config, HeroGrid
 from itertools import batched
+from typing import Protocol, Any
+
+
+class Source(Protocol):
+    def __call__(self, param: Any) -> list[int]:
+        """Source protocol"""
+
+type SourceDict = dict[str, Source]
 
 
 def get_category_height(width_px: float, width_heroes: int, heroes_number: int) -> float:
@@ -9,7 +17,7 @@ def get_category_height(width_px: float, width_heroes: int, heroes_number: int) 
     height = (card_height*height_heroes+padding2) * width_px / (card_width*width_heroes+padding2)
     return height
 
-def create_category(category_opts: CategorySettings, column_opts: ColumnSettings, y: float, f: dict) -> Category:
+def create_category(category_opts: CategorySettings, column_opts: ColumnSettings, y: float, f: SourceDict) -> Category:
     hero_ids = f[category_opts.source](category_opts.param)
     height = get_category_height(column_opts.width, column_opts.width_heroes, len(hero_ids))
     return Category(
@@ -21,7 +29,7 @@ def create_category(category_opts: CategorySettings, column_opts: ColumnSettings
         hero_ids=hero_ids
     )
 
-def create_config(config_opts: ConfigSettings, f: dict) -> Config:
+def create_config(config_opts: ConfigSettings, f: SourceDict) -> Config:
     columns_opts = config_opts.columns
     row_gap = config_opts.row_gap
     y = 0
@@ -32,6 +40,6 @@ def create_config(config_opts: ConfigSettings, f: dict) -> Config:
         categories.extend(row)
     return Config(config_name=config_opts.name, categories=categories)
 
-def create_grid(configs: list[ConfigSettings], factory: dict) -> HeroGrid:
+def create_grid(configs: list[ConfigSettings], factory: SourceDict) -> HeroGrid:
     new_configs = [create_config(config_settings, factory) for config_settings in configs]
     return HeroGrid(configs=new_configs)
