@@ -43,7 +43,7 @@ class FileSource:
             except (FileNotFoundError, ValidationError):
                 self._data = HeroGrid(configs=[])
 
-    def hero_list(self, param: FileParam) -> list[int]:
+    def __call__(self, param: FileParam) -> list[int]:
         self._load_data()
         config = get_item(self._data.configs, key=param.config, name_field="config_name")
         category = get_item(config.categories, key=param.category, name_field="category_name")
@@ -82,6 +82,6 @@ class AttrSource:
                 res = client.post("https://api.stratz.com/graphql", json={"query": "{constants{heroes{id displayName stats{primaryAttribute}}}}"})
             self._data = AttrResponse.model_validate_json(res.text)
 
-    def hero_list(self, param: AttrParam) -> list[int]:
+    def __call__(self, param: AttrParam) -> list[int]:
         self._load_data()
         return [hero.id for hero in sorted(self._data.data.constants.heroes, key=lambda h: h.displayName) if hero.stats.primaryAttribute == param]

@@ -10,7 +10,7 @@ def get_category_height(width_px: float, width_heroes: int, heroes_number: int) 
     return height
 
 def create_category(category_opts: CategorySettings, column_opts: ColumnSettings, y: float, f: dict) -> Category:
-    hero_ids = f[category_opts.source].hero_list(category_opts.param)
+    hero_ids = f[category_opts.source](category_opts.param)
     height = get_category_height(column_opts.width, column_opts.width_heroes, len(hero_ids))
     return Category(
         category_name=category_opts.name,
@@ -32,6 +32,6 @@ def create_config(config_opts: ConfigSettings, f: dict) -> Config:
         categories.extend(row)
     return Config(config_name=config_opts.name, categories=categories)
 
-def create_grid(configs: list[ConfigSettings], factory: dict) -> HeroGrid: # TODO: factory type hints
+def create_grid(configs: list[ConfigSettings], factory: dict) -> HeroGrid:
     new_configs = [create_config(config_settings, factory) for config_settings in configs]
     return HeroGrid(configs=new_configs)
