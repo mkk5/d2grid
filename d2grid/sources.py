@@ -21,11 +21,12 @@ class HeroGrid(BaseModel):
     version: int = 3
     configs: list[Config]
 
-def get_item[T](items: list[T], key: str | int, name_field: str) -> T:
+def get_item[T](items: list[T], key: int | str, name_field: str) -> T:
     if isinstance(key, int):
         return items[key]
     if isinstance(key, str):
         return next(i for i in items if getattr(i, name_field) == key)
+    raise TypeError(f"{key=} Key type expected: int|str, got: {type(key)}")
 
 class FileParam(BaseModel):
     config: int | str
@@ -79,7 +80,7 @@ class AttrSource:
         if self._data is None:
             headers = {"Authorization": f"Bearer {self.api_key}", "User-Agent": "STRATZ_API"}
             with httpx.Client(headers=headers) as client:
-                res = client.post("https://api.stratz.com/graphql", json={"query": "{constants{heroes{id displayName stats{primaryAttribute}}}}"})
+                res = client.post("https://api.stratz.com/graphql", json={"query": "{constants{heroes{id displayName stats{primaryAttribute}}}}"}) # TODO: generate string
             self._data = AttrResponse.model_validate_json(res.text)
 
     def __call__(self, param: AttrParam) -> list[int]:
