@@ -1,5 +1,5 @@
 from settings_model import ConfigSettings, CategorySettings, ColumnSettings
-from sources import Category, Config, HeroGrid
+from sources.file.model import Category, Config, HeroGrid
 from itertools import batched
 from typing import Protocol, Any
 
