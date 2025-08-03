@@ -1,28 +1,47 @@
 from pydantic import BaseModel, AfterValidator, Field
 from pathlib import Path
-from typing import Annotated, Literal
+from typing import Annotated, Literal, Union
 from sources import FileParam, AttrParam
 
-def json_extension(path: Path) -> Path:
-    if path.suffix != '.json':
-        raise ValueError(f'Path should have .json extension.')
-    return path
 
-class CategorySettings(BaseModel):
+class BaseCategorySettings(BaseModel):
     name: str
-    source: Literal["file", "attr"] # TODO: generate and map to param
-    param: FileParam | AttrParam
+
+
+class FileCategorySettings(BaseCategorySettings):
+    source: Literal["file"]
+    param: FileParam
+
+
+class AttrCategorySettings(BaseCategorySettings):
+    source: Literal["attr"]
+    param: AttrParam
+
+
+CategorySettings = Annotated[
+    Union[FileCategorySettings, AttrCategorySettings],
+    Field(discriminator="source")
+]
+
 
 class ColumnSettings(BaseModel):
     x: float = Field(ge=0)
     width: float = Field(gt=0)
     width_heroes: int = Field(gt=0)
 
+
 class ConfigSettings(BaseModel):
     name: str
     columns: list[ColumnSettings]
     row_gap: float = Field(ge=0)
     categories: list[CategorySettings]
+
+
+def json_extension(path: Path) -> Path:
+    if path.suffix != '.json':
+        raise ValueError(f'Path should have .json extension.')
+    return path
+
 
 class Settings(BaseModel):
     api_key: str
