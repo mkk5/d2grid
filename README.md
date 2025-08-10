@@ -8,8 +8,11 @@ Example `settings.json` file:
 
 ```json
 {
-    "api_key": "STRATZ API KEY",
-    "file_source": "hero_grid_config.json",
+    "version": 1,
+    "globals": {
+        "file_source": "hero_grid_config.json",
+        "stratz_api_key": "STRATZ API KEY"
+    },
     "result_paths": ["new_hero_grid_config.json"],
     "configs": [
         {

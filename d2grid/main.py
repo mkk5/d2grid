@@ -16,8 +16,8 @@ def main():
     args = create_arg_parser().parse_args()
     settings = read_data(args.filepath, Settings)
     factory = {
-        "file": FileSource(settings.file_source),
-        "attr": AttrSource(settings.api_key)
+        "file": FileSource(settings.globals.file_source),
+        "attr": AttrSource(settings.globals.stratz_api_key),
     }
     new_grid = create_grid(settings.configs, factory)
     write_data(settings.result_paths, new_grid)

@@ -43,8 +43,13 @@ def json_extension(path: Path) -> Path:
     return path
 
 
-class Settings(BaseModel):
-    api_key: str
+class GlobalSettings(BaseModel):
     file_source: Annotated[Path, AfterValidator(json_extension)]
+    stratz_api_key: str
+
+
+class Settings(BaseModel):
+    version: int = 1
+    globals: GlobalSettings
     result_paths: list[Annotated[Path, AfterValidator(json_extension)]]
     configs: list[ConfigSettings]
