@@ -18,7 +18,7 @@ class AttrCategorySettings(BaseCategorySettings):
     param: AttrParam
 
 
-CategorySettings = Annotated[
+type CategorySettings = Annotated[
     Union[FileCategorySettings, AttrCategorySettings],
     Field(discriminator="source")
 ]
