@@ -1,7 +1,7 @@
-from pydantic import BaseModel, AfterValidator, Field
-from pathlib import Path
 from typing import Annotated, Literal, Union
-from sources import FileParam, AttrParam
+from pathlib import Path
+from pydantic import BaseModel, AfterValidator, Field
+from d2grid.sources import FileParam, AttrParam
 
 
 class BaseCategorySettings(BaseModel):

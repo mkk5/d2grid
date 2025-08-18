@@ -1,8 +1,8 @@
-from settings_model import Settings
-from sources import FileSource, AttrSource
-from utils import read_data, write_data
 from argparse import ArgumentParser
-from generator import create_grid
+from d2grid.generator.settings_model import Settings
+from d2grid.generator.grid_generator import GridGenerator
+from d2grid.sources import FileSource, AttrSource
+from d2grid.utils import read_data, write_data
 
 
 def create_arg_parser() -> ArgumentParser:
@@ -12,15 +12,16 @@ def create_arg_parser() -> ArgumentParser:
                             help="Path to settings file (default: %(default)s)")
     return arg_parser
 
+
 def main():
     args = create_arg_parser().parse_args()
     settings = read_data(args.filepath, Settings)
-    factory = {
-        "file": FileSource(settings.globals.file_source),
-        "attr": AttrSource(settings.globals.stratz_api_key),
-    }
-    new_grid = create_grid(settings.configs, factory)
+    new_grid = GridGenerator(
+        file=FileSource(settings.globals.file_source),
+        attr=AttrSource(settings.globals.stratz_api_key),
+    ).create_grid(settings.configs)
     write_data(settings.result_paths, new_grid)
+
 
 if __name__ == '__main__':
     main()
