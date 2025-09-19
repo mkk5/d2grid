@@ -7,7 +7,7 @@ from d2grid.utils import read_data, write_data
 
 
 def create_arg_parser() -> ArgumentParser:
-    arg_parser = ArgumentParser(description="A configuration-driven script to generate Dota 2 hero grid layouts")
+    arg_parser = ArgumentParser(description="Highly customizable Dota 2 hero grid generator")
     arg_parser.add_argument("-V", "--version", action="version", version=version("d2grid"))
     arg_parser.add_argument("filepath", nargs="?", default="settings.json",
                             help="Path to settings file (default: %(default)s)")
