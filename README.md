@@ -1,14 +1,62 @@
-# Hero Grid Generator
+# D2Grid
 
-A configuration-driven script to generate and manage Dota 2 hero grid layouts.
+A powerful, highly customizable CLI tool for creating and managing your Dota 2 hero grid layouts.
 
-## Example configuration
+## Features
 
-Example `settings.json` file:
+- Declarative Layouts
+- Multiple Data Sources
+- Automatic Sizing
+- Extensibility (custom sources)
+- Update & Sync (across multiple Steam accounts)
+
+## Installation
+
+D2Grid can be installed from [PyPI](https://pypi.org/project/d2grid/):
+
+```shell
+# With uv
+uv tool install d2grid
+```
+
+```shell
+# With pipx
+pipx install d2grid
+```
+
+## Usage
+
+Once installed, run the tool by passing it the path to your [configuration file](#configuration):
+
+```shell
+d2grid settings.json
+```
+
+Alternatively, you can execute the script without an installation:
+
+```shell
+# With uv
+uvx d2grid settings.json
+```
+
+Or run from source directly:
+
+```shell
+# With uv
+uv run -m src.d2grid settings.json
+```
+
+```shell
+# With python (need to install python and dependencies)
+python3 -m src.d2grid settings.json
+```
+
+## Configuration
+
+The tool is controlled by a single JSON settings file. Here is an example:
 
 ```json
 {
-    "version": 1,
     "globals": {
         "file_source": "hero_grid_config.json",
         "stratz_api_key": "STRATZ API KEY"
@@ -25,7 +73,7 @@ Example `settings.json` file:
             "categories": [
                 { "name": "Strength", "source": "attr", "param": "str" },
                 { "name": "Universal", "source": "attr", "param": "all" },
-                { "name": "MyCustom", "source": "file", "param": {"config": "Fav", "category": 4} }
+                { "name": "Custom", "source": "file", "param": {"config": "Fav", "category": 4} }
             ]
         }
     ]
@@ -40,38 +88,29 @@ heroes within each category are determined by the specified [sources and paramet
 
 A single settings file can define multiple configs (layouts), each with as many categories as needed.
 
-Besides generating new files, the script can be used to sync hero grids across accounts or update existing layouts
-(adjusting a custom category's height if new heroes were added manually, etc.)
+**Note**: Dota stores its hero grid configuration at
+`<STEAM_PATH>/userdata/<STEAM_ID>/570/remote/hero_grid_config.json`, which can be used as the path for `file_source` or
+`result_paths`.
 
 ## Sources
 
+Sources are callables that provide a list of hero IDs for a category.
+
 ### File source
 
-Heroes from a category in your existing hero_grid_config.json file.
+Pulls heroes from a category in an existing `hero_grid_config.json` file. Perfect for syncing or updating old layouts.
 
-**Param**:
-
-- `config`: name (string) or index (integer) of config
-- `category`: name (string) or index (integer) of category
-
-**Requires**: `file_source` in settings
-
-> [!NOTE]
-> Names aren't unique – the first match wins.
+- **Requires**: `file_source` to be set in `globals`.
+- `param`: An object with:
+  - `config`: The name (string) or index (integer) of the config to read from.
+  - `category`: The name (string) or index (integer) of the category within that config.
+  
+  **Note**: When using names, the first match found will be used.
 
 ### Attribute source
 
-Heroes with the specified primary attribute, sorted alphabetically.
+Pulls heroes based on their primary attribute, sorted alphabetically.
 
-**Param**:
-
-`"str"` | `"agi"` | `"int"` | `"all"`
-
-**Requires**: `api_key` in settings
-
-## Usage
-
-1. Create `settings.json`
-2. Run `main.py`
-
-Dota uses hero grid configurations at `<STEAM_PATH>/userdata/<STEAM_ID>/570/remote/hero_grid_config.json`
+- **Requires**: `stratz_api_key` to be set in `globals`.
+- `param`: A string specifying the attribute:
+  - `str` | `agi` | `int` | `all`
