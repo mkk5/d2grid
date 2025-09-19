@@ -88,9 +88,8 @@ heroes within each category are determined by the specified [sources and paramet
 
 A single settings file can define multiple configs (layouts), each with as many categories as needed.
 
-**Note**: Dota stores its hero grid configuration at
-`<STEAM_PATH>/userdata/<STEAM_ID>/570/remote/hero_grid_config.json`, which can be used as the path for `file_source` or
-`result_paths`.
+Dota stores its hero grid configuration at `<STEAM_PATH>/userdata/<STEAMID>/570/remote/hero_grid_config.json`, which can
+be used as the path for `file_source` or `result_paths`.
 
 ## Sources
 
