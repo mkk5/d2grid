@@ -18,6 +18,7 @@ class AttrCategorySettings(BaseCategorySettings):
     param: AttrParam
 
 
+# TODO: Provide API for extension (https://github.com/pydantic/pydantic/issues/11595)
 type CategorySettings = Annotated[
     Union[FileCategorySettings, AttrCategorySettings],
     Field(discriminator="source")

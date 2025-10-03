@@ -1,2 +1,2 @@
-from .file import FileSource, FileParam
-from .attr import AttrSource, AttrParam
+from d2grid.sources.file import *
+from d2grid.sources.attr import *
