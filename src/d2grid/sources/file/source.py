@@ -18,14 +18,14 @@ class FileSource:
         self._data = None
 
     def _load_data(self) -> None:
-        if self._data is None:
-            try:
-                self._data = read_data(self.path, HeroGrid)
-            except (FileNotFoundError, ValidationError):
-                self._data = HeroGrid(configs=[])
+        try:
+            self._data = read_data(self.path, HeroGrid)
+        except (FileNotFoundError, ValidationError):
+            self._data = HeroGrid(configs=[])
 
     def __call__(self, param: FileParam) -> list[int]:
-        self._load_data()
+        if self._data is None:
+            self._load_data()
         config = get_item(self._data.configs, key=param.config, name_field="config_name")
         category = get_item(config.categories, key=param.category, name_field="category_name")
         return category.hero_ids
