@@ -1,3 +1,4 @@
+import json
 from pathlib import Path
 from pydantic import BaseModel
 
@@ -12,3 +13,6 @@ def write_data(paths: list[Path], data: BaseModel) -> None:
     for path in paths:
         with open(path, "w") as f:
             f.write(json_string)
+
+def print_schema(model: type[BaseModel]) -> None:
+    print(json.dumps(model.model_json_schema(), indent=2))
