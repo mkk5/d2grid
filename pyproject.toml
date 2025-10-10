@@ -24,7 +24,7 @@ classifiers = [
 requires-python = ">=3.12"
 dependencies = [
     "httpx>=0.28.1",
-    "pydantic>=2.11.7",
+    "pydantic>=2.12.0",
 ]
 
 [project.urls]
@@ -34,5 +34,5 @@ Repository = "https://github.com/mkk5/d2grid"
 d2grid = "d2grid.main:main"
 
 [build-system]
-requires = ["uv_build>=0.8.14,<0.9.0"]
+requires = ["uv_build>=0.9.1,<0.10.0"]
 build-backend = "uv_build"
