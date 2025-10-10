@@ -1,7 +1,7 @@
 from typing import Annotated, Literal, Union
 from pathlib import Path
 from pydantic import BaseModel, AfterValidator, Field
-from d2grid.sources import FileParam, AttrParam
+from d2grid.sources import FileParam, AttrParam, StratzParam
 
 
 class BaseCategorySettings(BaseModel):
@@ -18,9 +18,14 @@ class AttrCategorySettings(BaseCategorySettings):
     param: AttrParam
 
 
+class StratzCategorySettings(BaseCategorySettings):
+    source: Literal["stratz"]
+    param: StratzParam
+
+
 # TODO: Provide API for extension (https://github.com/pydantic/pydantic/issues/11595)
 type CategorySettings = Annotated[
-    Union[FileCategorySettings, AttrCategorySettings],
+    Union[FileCategorySettings, AttrCategorySettings, StratzCategorySettings],
     Field(discriminator="source")
 ]
 
