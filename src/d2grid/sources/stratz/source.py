@@ -26,7 +26,7 @@ def by_winrate(item: HeroAggregatedStats) -> float:
 
 def by_rank(item: HeroAggregatedStats) -> float:
     """Lower bound of Wilson score confidence interval for winrate"""
-    z = 2  # lower ~2.28%
+    z = 3  # lower ~0.13%
     n = item["matches"]
     p = item["wins"] / n
     z2 = z ** 2
