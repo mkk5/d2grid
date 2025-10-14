@@ -5,7 +5,7 @@ from .model import SpectralParam, SpectralResponse, HeroesData, Result
 class SpectralSource:
     def __init__(self):
         self._client = None
-        self._cache: dict[str | None, Result] = {}
+        self._cache: dict[str | None, Result] = {} # TODO: lru_cache?
 
     def _load_data(self, league: str | None):
         if self._client is None:

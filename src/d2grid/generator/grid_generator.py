@@ -9,6 +9,7 @@ class Source(Protocol):
 
     def __call__(self, param: Any) -> list[int]:
         """Primary method that returns hero IDs"""
+        # TODO: more generic return type? (https://docs.pydantic.dev/latest/concepts/conversion_table)
 
 
 def get_category_height(width_px: float, width_heroes: int, heroes_number: int) -> float:
