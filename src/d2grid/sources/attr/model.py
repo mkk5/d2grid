@@ -1,29 +1,36 @@
-from pydantic import BaseModel
-from typing import Literal
-
-type AttrParam = Literal["str", "agi", "int", "all"]
+from enum import Enum
+from pydantic import BaseModel, Field
 
 
-class Stats(BaseModel):
-    primaryAttribute: AttrParam
+# AttrParam
+class AttrParam(Enum):
+    STRENGTH = "str"
+    AGILITY = "agi"
+    INTELLIGENCE = "int"
+    UNIVERSAL = "all"
 
 
-class Heroes(BaseModel):
+# AttrResponse
+class PrimaryAttr(Enum):
+    STRENGTH = 0
+    AGILITY = 1
+    INTELLIGENCE = 2
+    UNIVERSAL = 3
+
+
+class Hero(BaseModel):
     id: int
-    displayName: str
-    stats: Stats
-
-
-class Constants(BaseModel):
-    heroes: list[Heroes]
+    display_name: str = Field(validation_alias="name_english_loc")
+    primary_attr: PrimaryAttr
 
 
 class Data(BaseModel):
-    constants: Constants
+    heroes: list[Hero]
 
 
-class AttrResponse(BaseModel):
+class Result(BaseModel):
     data: Data
 
 
-query_string = "{constants{heroes{id displayName stats{primaryAttribute}}}}"
+class AttrResponse(BaseModel):
+    result: Result

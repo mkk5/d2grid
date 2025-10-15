@@ -1,5 +1,5 @@
-__all__ = ["AttrSource", "AttrParam"]
+__all__ = ["attr_source", "AttrParam"]
 
 
 from .model import AttrParam
-from .source import AttrSource
+from .source import attr_source

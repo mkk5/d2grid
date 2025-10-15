@@ -1,20 +1,15 @@
+import functools
 import httpx
-from .model import AttrResponse, AttrParam, query_string
+from .model import AttrResponse, AttrParam, Hero
 
 
-class AttrSource:
-    def __init__(self, api_key: str) -> None:
-        self.api_key = api_key
-        self._data = None
+@functools.cache
+def _load_data() -> list[Hero]:
+    res = httpx.get("https://www.dota2.com/datafeed/herolist?language=english").raise_for_status()
+    response_data = AttrResponse.model_validate_json(res.text)
+    return response_data.result.data.heroes
 
-    def _load_data(self) -> None:
-        headers = {"Authorization": f"Bearer {self.api_key}", "User-Agent": "STRATZ_API"}
-        with httpx.Client(headers=headers) as client:
-            res = client.post("https://api.stratz.com/graphql", json={"query": query_string})
-        self._data = AttrResponse.model_validate_json(res.text)
 
-    def __call__(self, param: AttrParam) -> list[int]:
-        if self._data is None:
-            self._load_data()
-        return [hero.id for hero in sorted(self._data.data.constants.heroes, key=lambda h: h.displayName) if
-                hero.stats.primaryAttribute == param]
+def attr_source(param: AttrParam) -> list[int]:
+    heroes = _load_data()
+    return [hero.id for hero in sorted(heroes, key=lambda h: h.display_name) if hero.primary_attr.name == param.name]

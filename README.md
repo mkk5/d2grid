@@ -132,7 +132,6 @@ Pulls heroes from a category in an existing `hero_grid_config.json` file. Perfec
 
 Pulls heroes based on their primary attribute, sorted alphabetically.
 
-- **Requires**: `stratz_api_key` to be set in `globals`.
 - `source`: "attr"
 - `param`: A string specifying the attribute. Allowed values are: "str", "agi", "int" or "all".
 
