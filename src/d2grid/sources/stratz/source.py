@@ -34,8 +34,8 @@ def by_rank(item: HeroAggregatedStats) -> float:
 
 
 SORT_MAP: dict[Sort, Callable[[HeroAggregatedStats], float]] = {
-    "winrate": by_winrate,
-    "rank": by_rank,
+    Sort.WINRATE: by_winrate,
+    Sort.RANK: by_rank,
 }
 
 
@@ -51,7 +51,7 @@ class StratzSource:
 
         res = self._client.post("/graphql", json={
             "query": query_string,
-            "variables": param.model_dump(),
+            "variables": param.model_dump(mode="json"),
         }).raise_for_status()
 
         response_data = WinDayResponse.model_validate_json(res.text)
