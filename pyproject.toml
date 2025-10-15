@@ -1,6 +1,6 @@
 [project]
 name = "d2grid"
-version = "0.1.0"
+version = "0.2.0"
 description = "Highly customizable Dota 2 hero grid generator"
 readme = "README.md"
 authors = [
@@ -15,13 +15,11 @@ classifiers = [
     "License :: OSI Approved :: GNU Affero General Public License v3",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.12",
-    "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: 3.14",
     "Framework :: Pydantic :: 2",
     "Typing :: Typed",
 ]
-requires-python = ">=3.12"
+requires-python = ">=3.14"
 dependencies = [
     "httpx>=0.28.1",
     "pydantic>=2.12.0",
