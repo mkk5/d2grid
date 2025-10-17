@@ -3,7 +3,7 @@ from argparse import ArgumentParser
 from importlib.metadata import version
 from d2grid.generator.settings_model import Settings
 from d2grid.generator.grid_generator import GridGenerator
-from d2grid.sources import FileSource, attr_source, StratzSource, SpectralSource
+from d2grid.sources import empty_source, attr_source, FileSource, StratzSource, SpectralSource
 from d2grid.utils import read_data, write_data, print_schema
 
 
@@ -24,8 +24,9 @@ def main():
 
     settings = read_data(args.filepath, Settings)
     new_grid = GridGenerator(
-        file=FileSource(settings.globals.file_source),
+        empty=empty_source,
         attr=attr_source,
+        file=FileSource(settings.globals.file_source),
         stratz=StratzSource(settings.globals.stratz_api_key),
         spectral=SpectralSource(),
     ).create_grid(settings.configs)
