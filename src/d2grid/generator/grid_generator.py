@@ -1,15 +1,20 @@
-from typing import Protocol, Any
+from typing import Protocol, Any, Union
 from itertools import batched
 from d2grid.generator.settings_model import ConfigSettings, CategorySettings, ColumnSettings
 from d2grid.sources.file.model import Category, Config, HeroGrid
 
 
-class Source(Protocol):
-    """Source protocol"""
+class ParameterizedSource(Protocol):
+    """Source that requires a parameter"""
+    def __call__(self, param: Any) -> list[int]: ...
 
-    def __call__(self, param: Any) -> list[int]:
-        """Primary method that returns hero IDs"""
-        # TODO: more generic return type? (https://docs.pydantic.dev/latest/concepts/conversion_table)
+
+class ParameterlessSource(Protocol):
+    """Source that doesn't require a parameter"""
+    def __call__(self) -> list[int]: ...
+
+
+type Source = Union[ParameterizedSource, ParameterlessSource]
 
 
 def get_category_height(width_px: float, width_heroes: int, heroes_number: int) -> float:
@@ -24,7 +29,11 @@ class GridGenerator:
         self.sources = sources
 
     def create_category(self, category_opts: CategorySettings, column_opts: ColumnSettings, y: float) -> Category:
-        hero_ids = self.sources[category_opts.source](category_opts.param)
+        source = self.sources[category_opts.source]
+        if hasattr(category_opts, 'param'):
+            hero_ids = source(category_opts.param)
+        else:
+            hero_ids = source()
         height = get_category_height(column_opts.width, column_opts.width_heroes, len(hero_ids))
         return Category(
             category_name=category_opts.name,
