@@ -1,7 +1,7 @@
 from typing import Annotated, Literal, Union
 from pathlib import Path
 from pydantic import BaseModel, AfterValidator, Field
-from d2grid.sources import FileParam, AttrParam, StratzParam, SpectralParam
+from d2grid.sources import FileParam, AttrParam, StratzParam, SpectralParam, InlineParam
 
 
 class BaseCategorySettings(BaseModel):
@@ -28,8 +28,9 @@ class SpectralCategorySettings(BaseCategorySettings):
     param: SpectralParam
 
 
-class EmptyCategorySettings(BaseCategorySettings):
-    source: Literal["empty"]
+class InlineCategorySettings(BaseCategorySettings):
+    source: Literal["inline"]
+    param: InlineParam
 
 
 # TODO: Provide API for extension (https://github.com/pydantic/pydantic/issues/11595)
@@ -39,7 +40,7 @@ type CategorySettings = Annotated[
         AttrCategorySettings,
         StratzCategorySettings,
         SpectralCategorySettings,
-        EmptyCategorySettings
+        InlineCategorySettings
     ],
     Field(discriminator="source")
 ]
