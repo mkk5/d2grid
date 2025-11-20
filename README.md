@@ -77,7 +77,12 @@ The tool is controlled by a single JSON settings file. Here is an example:
                     "param": "str"
                 },
                 {
-                    "name": "Custom",
+                    "name": "My Custom List",
+                    "source": "inline",
+                    "param": [1, 2, 3, 14, 56]
+                },
+                {
+                    "name": "Sync from File",
                     "source": "file",
                     "param": { "config": "Fav", "category": 4 }
                 },
@@ -85,6 +90,11 @@ The tool is controlled by a single JSON settings file. Here is an example:
                     "name": "15 best supports (10 days)",
                     "source": "stratz",
                     "param": {"top": 15, "days": 10, "positions": ["POSITION_4", "POSITION_5"]}
+                },
+                {
+                    "name": "Spectral.gg Core Meta",
+                    "source": "spectral",
+                    "param": { "top": 12, "position": "P1" }
                 }
             ]
         }
@@ -92,7 +102,7 @@ The tool is controlled by a single JSON settings file. Here is an example:
 }
 ```
 
-The script will create `new_hero_grid_config.json` containing a single `Main Grid` layout with three
+The script will create `new_hero_grid_config.json` containing a single `Main Grid` layout with five
 categories distributed across two columns.
 
 Columns control the horizontal layout with automatic vertical sizing based on the number of heroes in each category. The
@@ -113,13 +123,26 @@ d2grid --schema
 
 Sources are callables that provide a list of hero IDs for a category.
 
-### File source
+### Inline Source
 
-Pulls heroes from a category in an existing `hero_grid_config.json` file. Perfect for syncing or updating old layouts.
+Directly provides a list of hero IDs. Use this for static categories.
 
-- **Requires**: `file_source` to be set in `globals`.
-- `source`: "file"
-- `param`: An object with the following fields:
+- Source Key: `"inline"`
+
+**Parameters**
+
+The `param` field accepts a simple list of hero IDs (integers).
+
+### File Source
+
+Pulls heroes from a category in an existing `hero_grid_config.json` file. Ideal for syncing or preserving manual edits.
+Requires `file_source` to be defined in the `globals` section of your settings.
+
+- Source Key: `"file"`
+
+**Parameters**
+
+The `param` field is an object with the following properties:
   
 | Property | Type              | Description                                                                           |
 |----------|-------------------|---------------------------------------------------------------------------------------|
@@ -128,27 +151,49 @@ Pulls heroes from a category in an existing `hero_grid_config.json` file. Perfec
 
 **Note**: When using string names, the first match found will be used.
 
-### Attribute source
+### Attribute Source
 
 Pulls heroes based on their primary attribute, sorted alphabetically.
 
-- `source`: "attr"
-- `param`: A string specifying the attribute. Allowed values are: "str", "agi", "int" or "all".
+- Source Key: `"attr"`
 
-### Stratz source
+**Parameters**
 
-Pulls the best heroes over a specified time window using STRATZ.
+The `param` field is a string specifying the attribute. Allowed values are: "str", "agi", "int" or "all".
 
-- **Requires**: `stratz_api_key` to be set in `globals`.
-- `source`: "stratz"
-- `param`: An object with the following fields:
-  
-| Property   | Type                       | Description                                                         |
-|------------|----------------------------|---------------------------------------------------------------------|
-| top        | integer                    | How many heroes to include in the category. **Required**            |
-| sort       | string[Sort]               | Sort method. **Default:** "rank"                                    |
-| days       | integer[1..30]             | Number of recent days of data to consider. **Default:** 14          |
-| ranks      | array<string[RankBracket]> | A list of rank brackets to filter by. **Default:** ["IMMORTAL"]     |
-| positions  | array<string[Position]>    | A list of positions to filter by. **Default:** [] (all positions)   |
-| regions    | array<string[Region]>      | A list of regions to filter by. **Default:** [] (all regions)       |
-| game_modes | array<string[GameMode]>    | A list of game modes to filter by. **Default:** ["ALL_PICK_RANKED"] |
+### Stratz Source
+
+Pulls the best performing heroes over a specified time window using the STRATZ API.
+Requires `stratz_api_key` to be defined in the `globals` section of your settings.
+
+- Source Key: `"stratz"`
+
+**Parameters**
+
+The `param` field is an object with the following properties:
+
+| Property   | Type           | Description                                                       |
+|------------|----------------|-------------------------------------------------------------------|
+| top        | integer        | How many heroes to include in the category. **Required**          |
+| sort       | string         | Sort method ("rank" or "winrate"). **Default:** "rank"            |
+| days       | integer        | Number of recent days of data to consider (1-30). **Default:** 14 |
+| ranks      | array\<string> | Rank brackets to filter by. **Default:** ["IMMORTAL"]             |
+| positions  | array\<string> | Positions to filter by. **Default:** [] (all positions)           |
+| regions    | array\<string> | Regions to filter by. **Default:** [] (all regions)               |
+| game_modes | array\<string> | Game modes to filter by. **Default:** ["ALL_PICK_RANKED"]         |
+
+### Spectral Source
+
+Pulls the best performing heroes in a specified league from Spectral.gg.
+
+- Source Key: `"spectral"`
+
+**Parameters**
+
+The `param` field is an object with the following properties:
+
+| Property | Type    | Description                                                            |
+|----------|---------|------------------------------------------------------------------------|
+| top      | integer | How many heroes to include in the category. **Required**               |
+| position | string  | The position to filter by ("P1", "P2", "P3", "P4", "P5"). **Required** |
+| league   | string  | League name. **Default:** latest ranked patch                          |
