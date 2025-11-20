@@ -4,17 +4,9 @@ from d2grid.generator.settings_model import ConfigSettings, CategorySettings, Co
 from d2grid.sources.file.model import Category, Config, HeroGrid
 
 
-class ParameterizedSource(Protocol):
-    """Source that requires a parameter"""
-    def __call__(self, param: Any) -> list[int]: ...
-
-
-class ParameterlessSource(Protocol):
-    """Source that doesn't require a parameter"""
-    def __call__(self) -> list[int]: ...
-
-
-type Source = Union[ParameterizedSource, ParameterlessSource]
+class Source(Protocol):
+    def __call__(self, param: Any) -> list[int]:
+        """Primary method that returns hero IDs"""
 
 
 def get_category_height(width_px: float, width_heroes: int, heroes_number: int) -> float:
@@ -29,11 +21,7 @@ class GridGenerator:
         self.sources = sources
 
     def create_category(self, category_opts: CategorySettings, column_opts: ColumnSettings, y: float) -> Category:
-        source = self.sources[category_opts.source]
-        if hasattr(category_opts, 'param'):
-            hero_ids = source(category_opts.param)
-        else:
-            hero_ids = source()
+        hero_ids = self.sources[category_opts.source](category_opts.param)
         height = get_category_height(column_opts.width, column_opts.width_heroes, len(hero_ids))
         return Category(
             category_name=category_opts.name,
