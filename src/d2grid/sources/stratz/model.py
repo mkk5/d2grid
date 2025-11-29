@@ -79,7 +79,7 @@ query HeroWinDayStats(
   $ranks: [RankBracket!],
   $positions: [MatchPlayerPositionType!],
   $regions: [BasicRegionType!],
-  $gameModes: [GameModeEnumType!]
+  $game_modes: [GameModeEnumType!]
 ) {
   heroStats {
     winDay(
@@ -87,7 +87,7 @@ query HeroWinDayStats(
       bracketIds: $ranks
       positionIds: $positions
       regionIds: $regions
-      gameModeIds: $gameModes
+      gameModeIds: $game_modes
     ) {
       day
       heroId
