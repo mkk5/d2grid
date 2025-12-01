@@ -1,6 +1,6 @@
 [project]
 name = "d2grid"
-version = "0.3.0"
+version = "0.3.1"
 description = "Highly customizable Dota 2 hero grid generator"
 readme = "README.md"
 authors = [
