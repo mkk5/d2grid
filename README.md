@@ -53,13 +53,15 @@ python3 -m src.d2grid settings.json
 
 ## Configuration
 
-The tool is controlled by a single JSON settings file. Here is an example:
+The tool is controlled by a single JSON settings file. Here is an example for reference:
+
+
 
 ```json
 {
     "globals": {
         "file_source": "hero_grid_config.json",
-        "stratz_api_key": "STRATZ API KEY"
+        "stratz_api_key": "YOUR STRATZ API KEY"
     },
     "result_paths": ["new_hero_grid_config.json"],
     "configs": [
@@ -67,7 +69,7 @@ The tool is controlled by a single JSON settings file. Here is an example:
             "name": "Main Grid",
             "columns": [
                 { "x": 0.0, "width": 316.0, "width_heroes": 6 },
-                { "x": 960, "width": 214, "width_heroes": 4 }
+                { "x": 320, "width": 214, "width_heroes": 4 }
             ],
             "row_gap": 21.5,
             "categories": [
