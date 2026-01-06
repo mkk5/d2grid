@@ -26,6 +26,9 @@ class FileSource:
     def __call__(self, param: FileParam) -> list[int]:
         if self._data is None:
             self._load_data()
-        config = get_item(self._data.configs, key=param.config, name_field="config_name")
-        category = get_item(config.categories, key=param.category, name_field="category_name")
+        try:
+            config = get_item(self._data.configs, key=param.config, name_field="config_name")
+            category = get_item(config.categories, key=param.category, name_field="category_name")
+        except (IndexError, StopIteration):
+            raise ValueError(f"Could not find config={param.config!r}, category={param.category!r} in {self.path}")
         return category.hero_ids
